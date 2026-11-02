@@ -9,9 +9,8 @@ pdf_file <- file.choose()
 
 file_path <- file.choose()
 
-# Display the available worksheets
+#Display the available worksheets
 excel_sheets(file_path)
-
 raw_data <- read_excel(file_path, sheet = "all_records")
 
 #check for duplicate records
@@ -30,12 +29,12 @@ constituency_data %>%
     ballots_cast > electorate
   )
 
-# Preparing Winning Margin Table
+## Preparing Winning Margin Table
 
 library(dplyr)
 library(tidyr)
 
-# Convert candidate vote columns into a long-format table
+#Convert candidate vote columns into a long-format table
 candidate_long <- constituency_data %>%
   select(constituency, all_of(vote_columns)) %>%
   pivot_longer(
@@ -51,13 +50,6 @@ ranked_candidates <- candidate_long %>%
   mutate(Rank = row_number()) %>%
   filter(Rank <= 2) %>%
   ungroup()
-
-## What does this code do?
-- pivot_longer() converts the candidate vote columns into rows, making it easier to compare candidates.
-- group_by(constituency) makes R compare candidates separately within each constituency.
-- arrange(desc(Votes)) places the candidate with the most votes first.
-- row_number() assigns rank 1 to the highest vote total and rank 2 to the second-highest.
-- filter(Rank <= 2) keeps only those two candidates.
 
  winning_margins <- ranked_candidates %>%
   mutate(
@@ -81,7 +73,7 @@ ranked_candidates <- candidate_long %>%
   ) %>%
   arrange(Winning_Margin)
 
-# Display the results
+#Display the results
 print(winning_margins)
 
 write.csv(
@@ -89,3 +81,4 @@ write.csv(
   "gambia_2021_winning_margins.csv",
   row.names = FALSE
 )
+
